@@ -1,5 +1,7 @@
 package com.terry.tank;
 
+import com.terry.tank.abstractfactory.*;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -13,13 +15,15 @@ import static com.terry.tank.Dir.*;
 public class TankFrame extends Frame {
 
     Tank myTank = new Tank(400, 400, Dir.DOWN, Group.GOOD, this);
-    List<Bullet> bullets = new ArrayList<>();
-    List<Tank> tanks = new ArrayList<>();
-    List<Explode> explodes = new ArrayList<>();
+    public List<BaseBullet> bullets = new ArrayList<>();
+    public List<BaseTank> tanks = new ArrayList<>();
+    public List<BaseExplode> explodes = new ArrayList<>();
 
+//    public GameFactory gf = new RectFactory();
+    public GameFactory gf = new DefaultFactory();
 
-    static final int GAME_WIDTH = PropertyMgr.getAsInt("gameWidth");
-    static final int GAME_HEIGHT = PropertyMgr.getAsInt("gameHeight");
+    public static final int GAME_WIDTH = PropertyMgr.getAsInt("gameWidth");
+    public static final int GAME_HEIGHT = PropertyMgr.getAsInt("gameHeight");
 
     public TankFrame() throws HeadlessException {
         setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -132,7 +136,7 @@ public class TankFrame extends Frame {
                     break;
             }
             setMainTankDir();
-            new Thread(()->new Audio("audio/tank_move.wav").play()).start();
+//            new Thread(()->new Audio("audio/tank_move.wav").play()).start();
         }
 
         private void setMainTankDir() {

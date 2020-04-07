@@ -8,10 +8,10 @@ public class Main {
         int initTankCount = PropertyMgr.getAsInt("initTankCount");
         // init enemy tank
         for (int i = 0; i < initTankCount; i++) {
-            tankFrame.tanks.add(new Tank(50 + i * 80, 200, Dir.DOWN, Group.BAD, tankFrame));
+            tankFrame.tanks.add(tankFrame.gf.createTank(50 + i * 80, 200, Dir.DOWN, Group.BAD, tankFrame));
         }
 
-        new Thread(() -> new Audio("audio/war1.wav").loop()).start();
+//        new Thread(() -> new Audio("audio/war1.wav").loop()).start();
 
         while (true) {
             Thread.sleep(50);

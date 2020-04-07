@@ -1,12 +1,11 @@
-package com.terry.tank;
+package com.terry.tank.abstractfactory;
 
-import com.terry.tank.abstractfactory.BaseBullet;
-import com.terry.tank.abstractfactory.BaseTank;
+import com.terry.tank.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Bullet extends BaseBullet {
+public class RectBullet extends BaseBullet {
     private static final int SPEED = PropertyMgr.getAsInt("bulletSpeed");
 
     public static int WIDTH = ResourceMgr.bulletD.getWidth(), HEIGHT = ResourceMgr.bulletD.getHeight();
@@ -26,7 +25,7 @@ public class Bullet extends BaseBullet {
         this.group = group;
     }
 
-    public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
+    public RectBullet(int x, int y, Dir dir, Group group, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
@@ -45,23 +44,11 @@ public class Bullet extends BaseBullet {
             tf.bullets.remove(this);
         }
 
-        BufferedImage img = null;
-        switch (dir) {
-            case LEFT:
-                img = ResourceMgr.bulletL;
-                break;
-            case UP:
-                img = ResourceMgr.bulletU;
-                break;
-            case RIGHT:
-                img = ResourceMgr.bulletR;
-                break;
-            case DOWN:
-                img = ResourceMgr.bulletD;
-                break;
-        }
+        Color c = g.getColor();
+        g.setColor(Color.YELLOW);
+        g.fillRect(x, y, 20, 20);
+        g.setColor(c);
 
-        g.drawImage(img, x, y, null);
         move();
 
 
@@ -92,8 +79,10 @@ public class Bullet extends BaseBullet {
     }
 
     // 碰撞检测
+
     public void collideWith(BaseTank tank) {
         if (this.group == tank.getGroup()) return;
+
 
         if (rect.intersects(tank.rect)) {
             tank.die();
