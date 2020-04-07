@@ -3,3 +3,7 @@ tankSpeed=5
 bulletSpeed=10
 gameWidth=1080
 gameHeight=720
+
+#fireStrategy
+goodFs=com.terry.tank.FourDirFireStrategy
+badFs=com.terry.tank.DefaultFireStrategy

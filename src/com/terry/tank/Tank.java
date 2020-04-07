@@ -2,21 +2,24 @@ package com.terry.tank;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 public class Tank {
-    private int x, y;
-    private Dir dir = Dir.DOWN;
+    int x, y;
+    Dir dir = Dir.DOWN;
     private static final int SPEED = PropertyMgr.getAsInt("tankSpeed");
     public static int WIDTH = ResourceMgr.goodTankU.getWidth(), HEIGHT = ResourceMgr.goodTankU.getHeight();
 
     private boolean moving = true;
-    private Group group = Group.BAD;
+    Group group = Group.BAD;
 
-    private TankFrame tf = null;
+    TankFrame tf = null;
     private boolean living = true;
     Rectangle rect = new Rectangle();
     private Random random = new Random();
+
+    FireStrategy fs;
 
     public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
         super();
@@ -29,6 +32,17 @@ public class Tank {
         rect.y = this.y;
         rect.width = WIDTH;
         rect.height = HEIGHT;
+        String fsp;
+        if (group == Group.GOOD) {
+            fsp = PropertyMgr.getAsString("goodFs");
+        } else {
+            fsp = PropertyMgr.getAsString("badFs");
+        }
+        try {
+            fs = (FireStrategy) Class.forName(fsp).getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | ClassNotFoundException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public Group getGroup() {
@@ -142,12 +156,7 @@ public class Tank {
     }
 
     public void fire() {
-        int bX = this.x + (Tank.WIDTH - Bullet.WIDTH)/2;
-        int bY = this.y + (Tank.HEIGHT - Bullet.HEIGHT)/2;
-        tf.bullets.add(new Bullet(bX, bY, this.dir, this.group, this.tf));
-        if (this.group == Group.GOOD) {
-            new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
-        }
+        fs.fire(this);
     }
 
     public void die() {
