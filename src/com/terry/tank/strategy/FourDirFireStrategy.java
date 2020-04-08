@@ -1,4 +1,6 @@
-package com.terry.tank;
+package com.terry.tank.strategy;
+
+import com.terry.tank.*;
 
 public class FourDirFireStrategy implements FireStrategy {
     @Override
@@ -10,7 +12,7 @@ public class FourDirFireStrategy implements FireStrategy {
             new Bullet(bX, bY, dir, t.group, t.gm);
         }
         if (t.group == Group.GOOD) {
-            new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
+//            new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
         }
     }
 }

@@ -1,26 +1,33 @@
 package com.terry.tank;
 
+import com.terry.tank.strategy.FireStrategy;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
-public class Tank {
-    int x, y;
-    Dir dir = Dir.DOWN;
+public class Tank extends GameObject {
+    public int x, y;
+    public Dir dir = Dir.DOWN;
     private static final int SPEED = PropertyMgr.getAsInt("tankSpeed");
     public static int WIDTH = ResourceMgr.goodTankU.getWidth(), HEIGHT = ResourceMgr.goodTankU.getHeight();
 
     private boolean moving = true;
-    Group group = Group.BAD;
+    public Group group = Group.BAD;
 
 
     private boolean living = true;
     Rectangle rect = new Rectangle();
+
+    public Rectangle getRect() {
+        return rect;
+    }
+
     private Random random = new Random();
 
     FireStrategy fs;
-    GameModel gm;
+    public GameModel gm;
 
     public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
         super();
@@ -87,7 +94,13 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        if (!living) gm.tanks.remove(this);
+        if (!living) {
+            gm.remove(this);
+            if (this.group == Group.GOOD) {
+                System.out.println("game over");
+                gm.gameOver(g);
+            }
+        }
         BufferedImage img = null;
         boolean isGood = this.group == Group.GOOD;
         switch (dir) {
@@ -112,7 +125,7 @@ public class Tank {
     }
 
     private void move() {
-        if(!moving) return;
+        if (!moving) return;
         // 根据方向进行移动
         switch (dir) {
             case LEFT:
@@ -129,7 +142,7 @@ public class Tank {
                 break;
         }
 
-        if (this.group == Group.BAD && random.nextInt(50) > 48 ) {
+        if (this.group == Group.BAD && random.nextInt(50) > 48) {
             this.fire();
             randomDir();
         }
@@ -148,11 +161,11 @@ public class Tank {
         if (this.y < 28) {
             y = 28;
         }
-        if (this.x > TankFrame.GAME_WIDTH - Tank.WIDTH -2) {
-            x = TankFrame.GAME_WIDTH - Tank.WIDTH -2;
+        if (this.x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2) {
+            x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
         }
-        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT -2) {
-            y = TankFrame.GAME_HEIGHT - Tank.HEIGHT -2;
+        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2) {
+            y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
         }
     }
 
@@ -161,7 +174,7 @@ public class Tank {
     }
 
     public void die() {
-        this.living =false;
+        this.living = false;
     }
 
     private void randomDir() {

@@ -14,9 +14,6 @@ public class TankFrame extends Frame {
 
     GameModel gm = new GameModel();
 
-
-
-
     static final int GAME_WIDTH = PropertyMgr.getAsInt("gameWidth");
     static final int GAME_HEIGHT = PropertyMgr.getAsInt("gameHeight");
 
@@ -55,9 +52,6 @@ public class TankFrame extends Frame {
     @Override
     public void paint(Graphics g) {
         gm.paint(g);
-
-
-
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -111,7 +105,7 @@ public class TankFrame extends Frame {
                     break;
             }
             setMainTankDir();
-            new Thread(()->new Audio("audio/tank_move.wav").play()).start();
+//            new Thread(()->new Audio("audio/tank_move.wav").play()).start();
         }
 
         private void setMainTankDir() {
