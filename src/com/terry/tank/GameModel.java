@@ -1,9 +1,6 @@
 package com.terry.tank;
 
-import com.terry.tank.cor.BulletTankCollider;
-import com.terry.tank.cor.Collider;
 import com.terry.tank.cor.ColliderChain;
-import com.terry.tank.cor.TanksCollider;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,9 +9,6 @@ import java.util.List;
 public class GameModel {
 
     Tank myTank = new Tank(400, 400, Dir.DOWN, Group.GOOD, this);
-//    List<Bullet> bullets = new ArrayList<>();
-//    List<Tank> tanks = new ArrayList<>();
-//    List<Explode> explodes = new ArrayList<>();
 
     ColliderChain chain = new ColliderChain();
 
@@ -76,9 +70,10 @@ public class GameModel {
     }
 
     public void gameOver(Graphics g) {
-//        Color c = g.getColor();
+        Color c = g.getColor();
+        g.setColor(Color.WHITE);
+
         g.drawString("GAME OVER", TankFrame.GAME_WIDTH/2, TankFrame.GAME_HEIGHT/2);
-
-
+        g.setColor(c);
     }
 }

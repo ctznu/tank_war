@@ -86,24 +86,6 @@ public class Bullet extends GameObject{
         }
     }
 
-    // 碰撞检测
-//    public boolean collideWith(Tank tank) {
-//        if (this.group == tank.getGroup()) return false;
-//
-//        // TODO: 用一个rect来记录子弹的位置
-//        Rectangle rect1 = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
-//        Rectangle rect2 = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);
-//        if (rect1.intersects(rect2)) {
-//            tank.die();
-//            this.die();
-//            int eX = tank.getX() + (Tank.WIDTH - Explode.WIDTH)/2;
-//            int eY = tank.getY() + (Tank.HEIGHT - Explode.HEIGHT)/2;
-//            gm.add(new Explode(eX, eY, gm));
-//            return true;
-//        }
-//        return false;
-//    }
-
     public void die() {
         this.living = false;
     }

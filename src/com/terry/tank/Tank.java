@@ -99,6 +99,7 @@ public class Tank extends GameObject {
             if (this.group == Group.GOOD) {
                 System.out.println("game over");
                 gm.gameOver(g);
+                return;
             }
         }
         BufferedImage img = null;

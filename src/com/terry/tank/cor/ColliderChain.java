@@ -2,7 +2,6 @@ package com.terry.tank.cor;
 
 import com.terry.tank.GameObject;
 import com.terry.tank.PropertyMgr;
-import com.terry.tank.ResourceMgr;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
@@ -12,8 +11,6 @@ public class ColliderChain implements Collider{
     private List<Collider> colliders = new LinkedList<>();
 
     public ColliderChain() {
-//        add(new BulletTankCollider());
-//        add(new TanksCollider());
         String colliders = PropertyMgr.getAsString("colliders");
         try {
             String[] colliderClazz = colliders.split(",");
