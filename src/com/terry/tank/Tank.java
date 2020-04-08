@@ -14,20 +14,21 @@ public class Tank {
     private boolean moving = true;
     Group group = Group.BAD;
 
-    TankFrame tf = null;
+
     private boolean living = true;
     Rectangle rect = new Rectangle();
     private Random random = new Random();
 
     FireStrategy fs;
+    GameModel gm;
 
-    public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+    public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
         super();
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.tf = tf;
+        this.gm = gm;
         rect.x = this.x;
         rect.y = this.y;
         rect.width = WIDTH;
@@ -86,7 +87,7 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        if (!living) tf.tanks.remove(this);
+        if (!living) gm.tanks.remove(this);
         BufferedImage img = null;
         boolean isGood = this.group == Group.GOOD;
         switch (dir) {
@@ -168,7 +169,4 @@ public class Tank {
         this.dir = Dir.values()[r];
     }
 
-    private boolean onEdge() {
-        return x <= 0 || x >= tf.GAME_WIDTH - WIDTH || y <= 0 || y >= tf.GAME_HEIGHT - HEIGHT;
-    }
 }
