@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 public class Tank extends GameObject {
-    public int x, y, preX, preY;
+    public int preX, preY;
     public Dir dir = Dir.DOWN;
     private static final int SPEED = PropertyMgr.getAsInt("tankSpeed");
     public static int WIDTH = ResourceMgr.goodTankU.getWidth(), HEIGHT = ResourceMgr.goodTankU.getHeight();
@@ -123,6 +123,16 @@ public class Tank extends GameObject {
         move();
 
 
+    }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeigth() {
+        return HEIGHT;
     }
 
     private void move() {
