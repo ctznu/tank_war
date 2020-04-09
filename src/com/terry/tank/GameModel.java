@@ -8,18 +8,38 @@ import java.util.List;
 
 public class GameModel {
 
-    Tank myTank = new Tank(400, 400, Dir.DOWN, Group.GOOD, this);
+    private static final GameModel INSTANCE = new GameModel();
+
+    static {
+        INSTANCE.init();
+    }
+    Tank myTank;
 
     ColliderChain chain = new ColliderChain();
 
     private List<GameObject> objects = new ArrayList<>();
 
-    public GameModel() {
-        int initTankCount = PropertyMgr.getAsInt("initTankCount");
+    public static GameModel getInstance() {
+        return INSTANCE;
+    }
+
+    private GameModel() {}
+
+    private void init() {
+        // init main tank
+        myTank = new Tank(500, 600, Dir.DOWN, Group.GOOD);
+
         // init enemy tank
+        int initTankCount = PropertyMgr.getAsInt("initTankCount");
         for (int i = 0; i < initTankCount; i++) {
-            add(new Tank(50 + i * 100, 200, Dir.DOWN, Group.BAD, this));
+            new Tank(50 + i * 100, 200, Dir.DOWN, Group.BAD);
         }
+
+        // init wall
+        add(new Wall(150, 150, 200, 50));
+        add(new Wall(600, 150, 200, 50));
+        add(new Wall(300, 300, 50, 200));
+        add(new Wall(600, 300, 50, 200));
     }
 
     public void add(GameObject go) {
@@ -47,8 +67,9 @@ public class GameModel {
             objects.get(i).paint(g);
         }
 
+        // collide check
         for (int i = 0; i < objects.size(); i++) {
-            chain.collide(myTank, objects.get(i));
+//            chain.collide(myTank, objects.get(i));
             for (int j = i + 1; j < objects.size(); j++) {
                 GameObject o1 = objects.get(i);
                 GameObject o2 = objects.get(j);
@@ -76,4 +97,11 @@ public class GameModel {
         g.drawString("GAME OVER", TankFrame.GAME_WIDTH/2, TankFrame.GAME_HEIGHT/2);
         g.setColor(c);
     }
+
+    public void explode(int x, int y) {
+        int eX = x + (Tank.WIDTH - Explode.WIDTH)/2;
+        int eY = y + (Tank.HEIGHT - Explode.HEIGHT)/2;
+        add(new Explode(eX, eY));
+    }
+
 }

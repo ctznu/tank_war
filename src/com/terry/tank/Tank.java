@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 public class Tank extends GameObject {
-    public int x, y;
+    public int x, y, preX, preY;
     public Dir dir = Dir.DOWN;
     private static final int SPEED = PropertyMgr.getAsInt("tankSpeed");
     public static int WIDTH = ResourceMgr.goodTankU.getWidth(), HEIGHT = ResourceMgr.goodTankU.getHeight();
@@ -18,7 +18,7 @@ public class Tank extends GameObject {
 
 
     private boolean living = true;
-    Rectangle rect = new Rectangle();
+    public Rectangle rect = new Rectangle();
 
     public Rectangle getRect() {
         return rect;
@@ -27,15 +27,13 @@ public class Tank extends GameObject {
     private Random random = new Random();
 
     FireStrategy fs;
-    public GameModel gm;
 
-    public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
+    public Tank(int x, int y, Dir dir, Group group) {
         super();
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.gm = gm;
         rect.x = this.x;
         rect.y = this.y;
         rect.width = WIDTH;
@@ -51,6 +49,8 @@ public class Tank extends GameObject {
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | ClassNotFoundException | IllegalAccessException e) {
             e.printStackTrace();
         }
+
+        GameModel.getInstance().add(this);
     }
 
     public Group getGroup() {
@@ -95,10 +95,10 @@ public class Tank extends GameObject {
 
     public void paint(Graphics g) {
         if (!living) {
-            gm.remove(this);
+            GameModel.getInstance().remove(this);
             if (this.group == Group.GOOD) {
                 System.out.println("game over");
-                gm.gameOver(g);
+                GameModel.getInstance().gameOver(g);
                 return;
             }
         }
@@ -127,6 +127,12 @@ public class Tank extends GameObject {
 
     private void move() {
         if (!moving) return;
+        preX = x;
+        preY = y;
+        if (this.group == Group.GOOD) {
+            System.out.println("preX " + preX + " preY " + preY);
+            System.out.println("x " + x + " y " + y);
+        }
         // 根据方向进行移动
         switch (dir) {
             case LEFT:
@@ -141,6 +147,10 @@ public class Tank extends GameObject {
             case DOWN:
                 y += SPEED;
                 break;
+        }
+        if (this.group == Group.GOOD) {
+            System.out.println("preX " + preX + " preY " + preY);
+            System.out.println("x " + x + " y " + y);
         }
 
         if (this.group == Group.BAD && random.nextInt(50) > 48) {
@@ -183,4 +193,12 @@ public class Tank extends GameObject {
         this.dir = Dir.values()[r];
     }
 
+    public void back() {
+//        if (this.group == Group.GOOD) {
+//            System.out.println("preX " + preX + " preY " + preY);
+//            System.out.println("x " + x + " y " + y);
+//        }
+        x = preX;
+        y = preY;
+    }
 }

@@ -1,9 +1,6 @@
 package com.terry.tank.cor;
 
-import com.terry.tank.Bullet;
-import com.terry.tank.Explode;
-import com.terry.tank.GameObject;
-import com.terry.tank.Tank;
+import com.terry.tank.*;
 
 import java.awt.*;
 
@@ -20,7 +17,7 @@ public class BulletTankCollider implements Collider {
         } else if (o1 instanceof Tank && o2 instanceof Bullet) {
             return collide(o2, o1);
         }
-        return false;
+        return true;
     }
 
     private boolean collideWith(Bullet bullet, Tank tank) {
@@ -34,7 +31,7 @@ public class BulletTankCollider implements Collider {
             bullet.die();
             int eX = tank.getX() + (Tank.WIDTH - Explode.WIDTH)/2;
             int eY = tank.getY() + (Tank.HEIGHT - Explode.HEIGHT)/2;
-            tank.gm.add(new Explode(eX, eY, tank.gm));
+            GameModel.getInstance().add(new Explode(eX, eY));
             return true;
         }
         return false;

@@ -1,12 +1,16 @@
 initTankCount=5
-tankSpeed=10
+tankSpeed=5
 bulletSpeed=10
 gameWidth=1080
 gameHeight=720
+
+#wall
+wallWidth=50
+wallHeight=50
 
 #fireStrategy
 goodFs=com.terry.tank.strategy.FourDirFireStrategy
 badFs=com.terry.tank.strategy.DefaultFireStrategy
 
 #colliders
-colliders=com.terry.tank.cor.BulletTankCollider,com.terry.tank.cor.TanksCollider
+colliders=com.terry.tank.cor.BulletTankCollider,com.terry.tank.cor.TankTankCollider,com.terry.tank.cor.BulletWallCollider,com.terry.tank.cor.TankWallCollider

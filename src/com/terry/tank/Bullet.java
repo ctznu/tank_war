@@ -11,8 +11,7 @@ public class Bullet extends GameObject{
     private Dir dir;
 
     private boolean living = true;
-    GameModel gm = null;
-    Rectangle rect = new Rectangle();
+    public Rectangle rect = new Rectangle();
     public Group group = Group.BAD;
 
     public Group getGroup() {
@@ -23,21 +22,20 @@ public class Bullet extends GameObject{
         this.group = group;
     }
 
-    public Bullet(int x, int y, Dir dir, Group group, GameModel gm) {
+    public Bullet(int x, int y, Dir dir, Group group) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.gm = gm;
         rect.x = this.x;
         rect.y = this.y;
         rect.width = WIDTH;
         rect.height = HEIGHT;
-        gm.add(this);
+        GameModel.getInstance().add(this);
     }
     public void paint(Graphics g) {
         if (!living) {
-            gm.remove(this);
+            GameModel.getInstance().remove(this);
         }
 
         BufferedImage img = null;

@@ -12,8 +12,6 @@ import static com.terry.tank.Dir.*;
 
 public class TankFrame extends Frame {
 
-    GameModel gm = new GameModel();
-
     static final int GAME_WIDTH = PropertyMgr.getAsInt("gameWidth");
     static final int GAME_HEIGHT = PropertyMgr.getAsInt("gameHeight");
 
@@ -51,7 +49,7 @@ public class TankFrame extends Frame {
 
     @Override
     public void paint(Graphics g) {
-        gm.paint(g);
+        GameModel.getInstance().paint(g);
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -99,7 +97,7 @@ public class TankFrame extends Frame {
                     bD = false;
                     break;
                 case KeyEvent.VK_F:
-                    gm.getMainTank().fire();
+                    GameModel.getInstance().getMainTank().fire();
                     break;
                 default:
                     break;
@@ -109,7 +107,7 @@ public class TankFrame extends Frame {
         }
 
         private void setMainTankDir() {
-            Tank myTank = gm.getMainTank();
+            Tank myTank = GameModel.getInstance().getMainTank();
             if (!bL && !bU && !bR && !bD) {
                 myTank.setMoving(false);
             } else {
