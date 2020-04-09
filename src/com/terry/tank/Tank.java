@@ -129,10 +129,6 @@ public class Tank extends GameObject {
         if (!moving) return;
         preX = x;
         preY = y;
-        if (this.group == Group.GOOD) {
-            System.out.println("preX " + preX + " preY " + preY);
-            System.out.println("x " + x + " y " + y);
-        }
         // 根据方向进行移动
         switch (dir) {
             case LEFT:
@@ -148,11 +144,6 @@ public class Tank extends GameObject {
                 y += SPEED;
                 break;
         }
-        if (this.group == Group.GOOD) {
-            System.out.println("preX " + preX + " preY " + preY);
-            System.out.println("x " + x + " y " + y);
-        }
-
         if (this.group == Group.BAD && random.nextInt(50) > 48) {
             this.fire();
             randomDir();
