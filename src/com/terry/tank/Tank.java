@@ -194,10 +194,6 @@ public class Tank extends GameObject {
     }
 
     public void back() {
-//        if (this.group == Group.GOOD) {
-//            System.out.println("preX " + preX + " preY " + preY);
-//            System.out.println("x " + x + " y " + y);
-//        }
         x = preX;
         y = preY;
     }

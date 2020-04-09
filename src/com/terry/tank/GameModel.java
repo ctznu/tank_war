@@ -27,7 +27,7 @@ public class GameModel {
 
     private void init() {
         // init main tank
-        myTank = new Tank(500, 600, Dir.DOWN, Group.GOOD);
+        myTank = new Tank(500, 800, Dir.UP, Group.GOOD);
 
         // init enemy tank
         int initTankCount = PropertyMgr.getAsInt("initTankCount");
@@ -37,9 +37,9 @@ public class GameModel {
 
         // init wall
         add(new Wall(150, 150, 200, 50));
-        add(new Wall(600, 150, 200, 50));
+        add(new Wall(700, 150, 200, 50));
         add(new Wall(300, 300, 50, 200));
-        add(new Wall(600, 300, 50, 200));
+        add(new Wall(700, 300, 50, 200));
     }
 
     public void add(GameObject go) {
@@ -62,28 +62,18 @@ public class GameModel {
 //        g.drawString("爆炸的数量：" + tanks.size(), 10, 100);
         g.setColor(c);
 
-        myTank.paint(g);
         for (int i = 0; i < objects.size(); i++) {
             objects.get(i).paint(g);
         }
 
         // collide check
         for (int i = 0; i < objects.size(); i++) {
-//            chain.collide(myTank, objects.get(i));
             for (int j = i + 1; j < objects.size(); j++) {
                 GameObject o1 = objects.get(i);
                 GameObject o2 = objects.get(j);
                 chain.collide(o1, o2);
             }
         }
-
-
-        /*for (int i = 0; i < bullets.size(); i++) {
-            for (int j = 0; j < tanks.size(); j++) {
-
-                bullets.get(i).collideWith(tanks.get(j));
-            }
-        }*/
     }
 
     public Tank getMainTank() {
@@ -92,9 +82,9 @@ public class GameModel {
 
     public void gameOver(Graphics g) {
         Color c = g.getColor();
-        g.setColor(Color.WHITE);
-
-        g.drawString("GAME OVER", TankFrame.GAME_WIDTH/2, TankFrame.GAME_HEIGHT/2);
+        g.setColor(Color.ORANGE);
+        g.setFont( new Font("TimesRoman" ,Font.PLAIN,40));
+        g.drawString("GAME OVER", 400, 400);
         g.setColor(c);
     }
 
