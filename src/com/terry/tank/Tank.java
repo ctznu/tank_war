@@ -17,7 +17,7 @@ public class Tank extends GameObject {
     public Group group = Group.BAD;
 
 
-    private boolean living = true;
+    protected boolean living = true;
     public Rectangle rect = new Rectangle();
 
     public Rectangle getRect() {
@@ -96,11 +96,6 @@ public class Tank extends GameObject {
     public void paint(Graphics g) {
         if (!living) {
             GameModel.getInstance().remove(this);
-            if (this.group == Group.GOOD) {
-                System.out.println("game over");
-                GameModel.getInstance().gameOver(g);
-                return;
-            }
         }
         BufferedImage img = null;
         boolean isGood = this.group == Group.GOOD;

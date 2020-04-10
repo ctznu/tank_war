@@ -74,6 +74,9 @@ public class GameModel {
                 chain.collide(o1, o2);
             }
         }
+        if (!myTank.living) {
+            gameOver(g);
+        }
     }
 
     public Tank getMainTank() {
