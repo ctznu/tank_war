@@ -1,6 +1,6 @@
 initTankCount=5
 tankSpeed=5
-bulletSpeed=10
+bulletSpeed=5
 gameWidth=1080
 gameHeight=720
 

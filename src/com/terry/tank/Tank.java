@@ -1,10 +1,15 @@
 package com.terry.tank;
 
+import com.terry.tank.observer.TankFireEvent;
+import com.terry.tank.observer.TankFireHandler;
+import com.terry.tank.observer.TankFireObserver;
 import com.terry.tank.strategy.FireStrategy;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Tank extends GameObject {
@@ -192,5 +197,13 @@ public class Tank extends GameObject {
     public void back() {
         x = preX;
         y = preY;
+    }
+
+    private List<TankFireObserver> fireObversers = Arrays.asList(new TankFireHandler());
+    public void handleFireKey() {
+        TankFireEvent event = new TankFireEvent(this);
+        for (TankFireObserver o : fireObversers) {
+            o.actionOnFire(event);
+        }
     }
 }
