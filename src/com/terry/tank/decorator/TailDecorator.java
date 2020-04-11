@@ -18,7 +18,7 @@ public class TailDecorator extends GODecorator {
 
         Color c = g.getColor();
         g.setColor(Color.CYAN);
-        g.drawLine(go.x + go.getWidth() / 2, go.y, go.x + go.getWidth() / 2, go.y + go.getHeigth());
+        g.drawLine(go.x + go.getWidth() / 2, go.y, go.x + go.getWidth() / 2, go.y + go.getHeight());
         g.setColor(c);
     }
 
@@ -28,7 +28,7 @@ public class TailDecorator extends GODecorator {
     }
 
     @Override
-    public int getHeigth() {
-        return go.getHeigth();
+    public int getHeight() {
+        return go.getHeight();
     }
 }

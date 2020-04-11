@@ -126,7 +126,7 @@ public class Tank extends GameObject {
     }
 
     @Override
-    public int getHeigth() {
+    public int getHeight() {
         return HEIGHT;
     }
 

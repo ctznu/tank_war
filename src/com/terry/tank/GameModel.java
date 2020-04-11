@@ -19,6 +19,8 @@ public class GameModel {
 
     private List<GameObject> objects = new ArrayList<>();
 
+    private int tankCount, bulletCount;
+
     public static GameModel getInstance() {
         return INSTANCE;
     }
@@ -43,10 +45,14 @@ public class GameModel {
     }
 
     public void add(GameObject go) {
+        if (go instanceof Tank && ((Tank) go).group == Group.BAD) tankCount++;
+        if (go instanceof Bullet) bulletCount++;
         this.objects.add(go);
     }
 
     public void remove(GameObject go) {
+        if (go instanceof Tank) tankCount--;
+        if (go instanceof Bullet) bulletCount--;
         this.objects.remove(go);
     }
 
@@ -57,8 +63,8 @@ public class GameModel {
     public void paint(Graphics g) {
         Color c = g.getColor();
         g.setColor(Color.WHITE);
-//        g.drawString("子弹的数量：" + bullets.size(), 10, 60);
-//        g.drawString("敌人的数量：" + tanks.size(), 10, 80);
+        g.drawString("子弹的数量：" + bulletCount, 10, 60);
+        g.drawString("敌人的数量：" + tankCount, 10, 80);
 //        g.drawString("爆炸的数量：" + tanks.size(), 10, 100);
         g.setColor(c);
 

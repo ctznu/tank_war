@@ -37,7 +37,7 @@ public class Wall extends GameObject{
     }
 
     @Override
-    public int getHeigth() {
+    public int getHeight() {
         return h;
     }
 }

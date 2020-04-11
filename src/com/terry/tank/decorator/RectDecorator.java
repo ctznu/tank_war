@@ -18,7 +18,7 @@ public class RectDecorator extends GODecorator {
 
         Color c = g.getColor();
         g.setColor(Color.PINK);
-        g.drawRect(go.x, go.y, go.getWidth(), go.getHeigth());
+        g.drawRect(go.x, go.y, go.getWidth(), go.getHeight());
         g.setColor(c);
     }
 
@@ -28,7 +28,7 @@ public class RectDecorator extends GODecorator {
     }
 
     @Override
-    public int getHeigth() {
-        return go.getHeigth();
+    public int getHeight() {
+        return go.getHeight();
     }
 }
