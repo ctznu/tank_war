@@ -2,6 +2,8 @@ package com.terry.tank.strategy;
 
 import com.terry.tank.Tank;
 
-public interface FireStrategy {
+import java.io.Serializable;
+
+public interface FireStrategy extends Serializable {
     void fire(Tank tank);
 }
