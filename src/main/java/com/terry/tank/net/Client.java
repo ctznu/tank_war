@@ -1,5 +1,7 @@
 package com.terry.tank.net;
 
+import com.terry.tank.Tank;
+import com.terry.tank.TankFrame;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -70,25 +72,25 @@ class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline()
                 .addLast(new TankJoinMsgEncoder())
+                .addLast(new TankJoinMsgDecoder())
                 .addLast(new ClientHandler());
     }
 }
 
-class ClientHandler extends ChannelInboundHandlerAdapter {
+class ClientHandler extends SimpleChannelInboundHandler<TankJoinMsg> {
+
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf buf = null;
-        try {
-            buf = (ByteBuf) msg;
-            byte[] bytes = new byte[buf.readableBytes()];
-            buf.getBytes(buf.readerIndex(), bytes);
-            System.out.println("client: " + new String(bytes));
-//            ClientFrame.INSTANCE.updateText(new String(bytes));
-        } finally {
-            if (buf != null) {
-                ReferenceCountUtil.release(buf);
-            }
+    protected void channelRead0(ChannelHandlerContext ctx, TankJoinMsg msg) throws Exception {
+        if (msg.id.equals(TankFrame.INSTANCE.getMainTank().getId()) ||
+                TankFrame.INSTANCE.findByUUID(msg.id) != null) {
+            return;
         }
+        System.out.println(msg);
+        Tank t = new Tank(msg);
+        TankFrame.INSTANCE.addTank(t);
+
+        // send a new TankJoinMsg to the new joined tank
+        ctx.writeAndFlush(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
     }
 
     @Override
@@ -96,6 +98,6 @@ class ClientHandler extends ChannelInboundHandlerAdapter {
         // channel 第一次连上可用，写出一个字符串 Direct Memory
 //        ByteBuf buf = Unpooled.copiedBuffer("hello".getBytes());
 //        ctx.writeAndFlush(buf); // buf 指向直接内存，所以必须释放，writeAndFlush 自动释放
-//        ctx.writeAndFlush(new TankJoinMsg(5, 8));
+        ctx.writeAndFlush(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
     }
 }

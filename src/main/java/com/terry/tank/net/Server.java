@@ -14,10 +14,6 @@ public class Server {
 
     public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    public static void main(String[] args) {
-
-    }
-
     public void serverStart() {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup(2);
@@ -30,7 +26,7 @@ public class Server {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline pl = ch.pipeline();
-                        pl.addLast(new TankJoinMsgDecoder())
+                        pl/*.addLast(new TankJoinMsgDecoder())*/
                                 .addLast(new ServerChildHandler());
                     }
                 })
@@ -56,35 +52,6 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("channelRead");
-        try {
-            TankJoinMsg tm = (TankJoinMsg) msg;
-            System.out.println(tm);
-        } finally {
-            ReferenceCountUtil.release(msg);
-        }
-
-        /*ByteBuf buf = null;
-        try {
-            buf = (ByteBuf) msg;
-            byte[] bytes = new byte[buf.readableBytes()];
-            buf.getBytes(buf.readerIndex(), bytes);
-            String s = new String(bytes);
-
-            ServerFrame.INSTANCE.updateClientMsg(s);
-
-            if ("_bye_".equals(s)) {
-                ServerFrame.INSTANCE.updateServerMsg("客户端要求退出");
-                Server.clients.remove(ctx.channel());
-                ctx.close();
-            } else {
-                Server.clients.writeAndFlush(msg);
-            }
-        } finally {
-//            if (buf != null) {
-//                ReferenceCountUtil.release(buf);
-//            }
-        }*/
-
+        Server.clients.writeAndFlush(msg);
     }
 }

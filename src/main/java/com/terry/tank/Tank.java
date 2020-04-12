@@ -1,5 +1,7 @@
 package com.terry.tank;
 
+import com.terry.tank.net.TankJoinMsg;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -11,7 +13,7 @@ public class Tank {
     private static final int SPEED = PropertyMgr.getAsInt("tankSpeed");
     public static int WIDTH = ResourceMgr.goodTankU.getWidth(), HEIGHT = ResourceMgr.goodTankU.getHeight();
 
-    private boolean moving = true;
+    private boolean moving = false;
     private Group group = Group.BAD;
 
     private TankFrame tf = null;
@@ -32,6 +34,15 @@ public class Tank {
         rect.y = this.y;
         rect.width = WIDTH;
         rect.height = HEIGHT;
+    }
+
+    public Tank(TankJoinMsg msg) {
+        this.x = msg.x;
+        this.y = msg.y;
+        this.dir = msg.dir;
+        this.moving = msg.moving;
+        this.group = msg.group;
+        this.id = msg.id;
     }
 
     public Group getGroup() {
@@ -84,6 +95,12 @@ public class Tank {
 
     public void paint(Graphics g) {
         if (!living) tf.tanks.remove(this);
+        //uuid on head
+        Color c = g.getColor();
+        g.setColor(Color.orange);
+        g.drawString(id.toString(), x, y - 10);
+        g.setColor(c);
+
         BufferedImage img = null;
         boolean isGood = this.group == Group.GOOD;
         switch (dir) {
@@ -170,7 +187,4 @@ public class Tank {
         this.dir = Dir.values()[r];
     }
 
-    private boolean onEdge() {
-        return x <= 0 || x >= tf.GAME_WIDTH - WIDTH || y <= 0 || y >= tf.GAME_HEIGHT - HEIGHT;
-    }
 }

@@ -5,27 +5,32 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 import static com.terry.tank.Dir.*;
 
 public class TankFrame extends Frame {
 
-    Tank myTank = new Tank(400, 400, Dir.DOWN, Group.GOOD, this);
+    public static TankFrame INSTANCE = new TankFrame();
+
+    Random r = new Random();
+
+//    Tank myTank = new Tank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD, this);
+    Tank myTank = new Tank(r.nextInt(1080), r.nextInt(720), Dir.DOWN, Group.GOOD, this);
     List<Bullet> bullets = new ArrayList<>();
-    List<Tank> tanks = new ArrayList<>();
+    Map<UUID, Tank> tanks = new HashMap<>();
     List<Explode> explodes = new ArrayList<>();
 
 
     static final int GAME_WIDTH = PropertyMgr.getAsInt("gameWidth");
     static final int GAME_HEIGHT = PropertyMgr.getAsInt("gameHeight");
 
-    public TankFrame() throws HeadlessException {
-        setSize(GAME_WIDTH, GAME_HEIGHT);
+    private TankFrame() {
+        setSize(1080, 720);
         setResizable(false);
         setTitle("Tank War");
-        setVisible(true);
+//        setVisible(true);
 
         addKeyListener(new MyKeyListener());
 
@@ -60,25 +65,36 @@ public class TankFrame extends Frame {
         g.setColor(Color.WHITE);
         g.drawString("子弹的数量：" + bullets.size(), 10, 60);
         g.drawString("敌人的数量：" + tanks.size(), 10, 80);
-        g.drawString("爆炸的数量：" + tanks.size(), 10, 100);
+        g.drawString("爆炸的数量：" + explodes.size(), 10, 100);
         g.setColor(c);
         myTank.paint(g);
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).paint(g);
         }
-        for (int i = 0; i < tanks.size(); i++) {
-            tanks.get(i).paint(g);
-        }
+        // java8 stream api
+        tanks.values().stream().forEach((e)->e.paint(g));
+
         for (int i = 0; i < explodes.size(); i++) {
             explodes.get(i).paint(g);
         }
         for (int i = 0; i < bullets.size(); i++) {
             for (int j = 0; j < tanks.size(); j++) {
-
                 bullets.get(i).collideWith(tanks.get(j));
             }
         }
 
+    }
+
+    public Tank getMainTank() {
+        return myTank;
+    }
+
+    public Tank findByUUID(UUID id) {
+        return tanks.get(id);
+    }
+
+    public void addTank(Tank t) {
+        tanks.put(t.getId(), t);
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -107,6 +123,7 @@ public class TankFrame extends Frame {
                     break;
             }
             setMainTankDir();
+            new Thread(()->new Audio("audio/tank_move.wav").play()).start();
         }
 
         @Override
@@ -132,7 +149,6 @@ public class TankFrame extends Frame {
                     break;
             }
             setMainTankDir();
-            new Thread(()->new Audio("audio/tank_move.wav").play()).start();
         }
 
         private void setMainTankDir() {

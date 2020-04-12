@@ -97,7 +97,15 @@ public class TankJoinMsg {
         return bytes;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "TankJoinMsg{" +
+                "x=" + x +
+                ", y=" + y +
+                ", dir=" + dir +
+                ", moving=" + moving +
+                ", group=" + group +
+                ", id=" + id +
+                '}';
+    }
 }
