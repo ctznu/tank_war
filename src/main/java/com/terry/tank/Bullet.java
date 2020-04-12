@@ -1,7 +1,12 @@
 package com.terry.tank;
 
+import com.terry.tank.net.BulletNewMsg;
+import com.terry.tank.net.Client;
+import com.terry.tank.net.TankDieMsg;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.UUID;
 
 public class Bullet {
     private static final int SPEED = PropertyMgr.getAsInt("bulletSpeed");
@@ -11,9 +16,26 @@ public class Bullet {
     private Dir dir;
 
     private boolean living = true;
+
+    private UUID id = UUID.randomUUID();
+    private UUID playerID;
+
     TankFrame tf = null;
     Rectangle rect = new Rectangle();
     private Group group = Group.BAD;
+
+    public Bullet(BulletNewMsg msg) {
+        this.playerID = msg.getPlayerID();
+        this.id = msg.getId();
+        this.x = msg.getX();
+        this.y = msg.getY();
+        this.dir = msg.getDir();
+        this.living = true;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public Group getGroup() {
         return group;
@@ -23,7 +45,36 @@ public class Bullet {
         this.group = group;
     }
 
-    public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Dir getDir() {
+        return dir;
+    }
+
+    public boolean isLiving() {
+        return living;
+    }
+
+    public UUID getPlayerID() {
+        return playerID;
+    }
+
+    public void setPlayerID(UUID playerID) {
+        this.playerID = playerID;
+    }
+
+    public Bullet(UUID playerID, int x, int y, Dir dir, Group group, TankFrame tf) {
+        this.playerID = playerID;
         this.x = x;
         this.y = y;
         this.dir = dir;
@@ -87,21 +138,16 @@ public class Bullet {
 
     // 碰撞检测
     public void collideWith(Tank tank) {
-        if (this.group == tank.getGroup()) return;
+        if (this.playerID.equals(tank.getId())) return;
 
-        // TODO: 用一个rect来记录子弹的位置
-        Rectangle rect1 = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
-        Rectangle rect2 = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);
-        if (rect1.intersects(rect2)) {
+        if (this.living && tank.isLiving() && this.rect.intersects(tank.rect)) {
             tank.die();
             this.die();
-            int eX = tank.getX() + (Tank.WIDTH - Explode.WIDTH)/2;
-            int eY = tank.getY() + (Tank.HEIGHT - Explode.HEIGHT)/2;
-            tf.explodes.add(new Explode(eX, eY, tf));
+            Client.INSTANCE.send(new TankDieMsg(this.id, tank.getId()));
         }
     }
 
-    private void die() {
+    public void die() {
         this.living = false;
     }
 }

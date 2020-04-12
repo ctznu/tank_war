@@ -1,5 +1,7 @@
 package com.terry.tank;
 
+import com.terry.tank.net.BulletNewMsg;
+import com.terry.tank.net.Client;
 import com.terry.tank.net.TankJoinMsg;
 
 import java.awt.*;
@@ -34,6 +36,7 @@ public class Tank {
         rect.y = this.y;
         rect.width = WIDTH;
         rect.height = HEIGHT;
+//        TankFrame.INSTANCE.addTank(this);
     }
 
     public Tank(TankJoinMsg msg) {
@@ -43,6 +46,19 @@ public class Tank {
         this.moving = msg.moving;
         this.group = msg.group;
         this.id = msg.id;
+
+        rect.x = this.x;
+        rect.y = this.y;
+        rect.width = WIDTH;
+        rect.height = HEIGHT;
+    }
+
+    public boolean isLiving() {
+        return living;
+    }
+
+    public void setLiving(boolean living) {
+        this.living = living;
     }
 
     public Group getGroup() {
@@ -94,12 +110,24 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        if (!living) tf.tanks.remove(this);
+        /*if (!living) {
+            TankFrame.INSTANCE.tanks.remove(this.getId());
+        }*/
         //uuid on head
         Color c = g.getColor();
         g.setColor(Color.orange);
-        g.drawString(id.toString(), x, y - 10);
+        g.drawString(id.toString(), x, y - 20);
+        g.drawString("live=" + living, x, y - 10);
         g.setColor(c);
+
+        if (!living) {
+            moving = false;
+            c = g.getColor();
+            g.setColor(Color.WHITE);
+            g.drawRect(x, y, WIDTH, HEIGHT);
+            g.setColor(c);
+            return;
+        }
 
         BufferedImage img = null;
         boolean isGood = this.group == Group.GOOD;
@@ -125,7 +153,7 @@ public class Tank {
     }
 
     private void move() {
-        if(!moving) return;
+        if(!moving || !living) return;
         // 根据方向进行移动
         switch (dir) {
             case LEFT:
@@ -172,7 +200,12 @@ public class Tank {
     public void fire() {
         int bX = this.x + (Tank.WIDTH - Bullet.WIDTH)/2;
         int bY = this.y + (Tank.HEIGHT - Bullet.HEIGHT)/2;
-        tf.bullets.add(new Bullet(bX, bY, this.dir, this.group, this.tf));
+
+        Bullet bullet = new Bullet(this.id, bX, bY, this.dir, this.group, this.tf);
+        tf.bullets.add(bullet);
+
+        Client.INSTANCE.send(new BulletNewMsg(bullet));
+
         if (this.group == Group.GOOD) {
             new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
         }
@@ -180,6 +213,9 @@ public class Tank {
 
     public void die() {
         this.living =false;
+        int eX = this.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
+        int eY = this.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
+        TankFrame.INSTANCE.explodes.add(new Explode(eX, eY));
     }
 
     private void randomDir() {

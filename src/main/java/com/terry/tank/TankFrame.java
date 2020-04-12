@@ -1,6 +1,7 @@
 package com.terry.tank;
 
 import com.terry.tank.net.Client;
+import com.terry.tank.net.TankDirChangedMsg;
 import com.terry.tank.net.TankStartMovingMsg;
 import com.terry.tank.net.TankStopMsg;
 
@@ -75,6 +76,7 @@ public class TankFrame extends Frame {
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).paint(g);
         }
+//        bullets.values().stream().forEach(e->e.paint(g));
         // java8 stream api
         tanks.values().stream().forEach((e)->e.paint(g));
 
@@ -82,8 +84,8 @@ public class TankFrame extends Frame {
             explodes.get(i).paint(g);
         }
         for (int i = 0; i < bullets.size(); i++) {
-            for (int j = 0; j < tanks.size(); j++) {
-                bullets.get(i).collideWith(tanks.get(j));
+            for (Tank tank : tanks.values()) {
+                bullets.get(i).collideWith(tank);
             }
         }
 
@@ -93,12 +95,29 @@ public class TankFrame extends Frame {
         return myTank;
     }
 
-    public Tank findByUUID(UUID id) {
+    public Tank findTankByUUID(UUID id) {
         return tanks.get(id);
+    }
+
+    public Bullet findBulletByUUID(UUID id) {
+        for (int i = 0; i < bullets.size(); i++) {
+            if (bullets.get(i).getId().equals(id)) {
+                return bullets.get(i);
+            }
+        }
+        return null;
     }
 
     public void addTank(Tank t) {
         tanks.put(t.getId(), t);
+    }
+
+    public void addBullet(Bullet b) {
+        bullets.add(b);
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -156,6 +175,9 @@ public class TankFrame extends Frame {
         }
 
         private void setMainTankDir() {
+            // save prev dir
+            Dir dir = myTank.getDir();
+
             if (!bL && !bU && !bR && !bD) {
                 myTank.setMoving(false);
 
@@ -173,6 +195,9 @@ public class TankFrame extends Frame {
                     Client.INSTANCE.send(new TankStartMovingMsg(getMainTank()));
                 }
                 myTank.setMoving(true);
+                if (dir != myTank.getDir()) {
+                    Client.INSTANCE.send(new TankDirChangedMsg(myTank));
+                }
             }
         }
     }

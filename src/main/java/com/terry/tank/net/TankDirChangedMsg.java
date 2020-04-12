@@ -7,27 +7,26 @@ import com.terry.tank.TankFrame;
 import java.io.*;
 import java.util.UUID;
 
-public class TankStartMovingMsg extends Msg {
-
+public class TankDirChangedMsg extends Msg {
     UUID id;
     int x, y;
     Dir dir;
 
-    public TankStartMovingMsg() {
-    }
-
-    public TankStartMovingMsg(UUID id, int x, int y, Dir dir) {
+    public TankDirChangedMsg(UUID id, int x, int y, Dir dir) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.dir = dir;
     }
 
-    public TankStartMovingMsg(Tank tank) {
+    public TankDirChangedMsg(Tank tank) {
         this.id = tank.getId();
         this.x = tank.getX();
         this.y = tank.getY();
         this.dir = tank.getDir();
+    }
+
+    public TankDirChangedMsg() {
     }
 
     public UUID getId() {
@@ -46,9 +45,25 @@ public class TankStartMovingMsg extends Msg {
         return dir;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
+    }
+
     @Override
     public String toString() {
-        return "TankStartMovingMsg{" +
+        return "TankDirChangedMsg{" +
                 "id=" + id +
                 ", x=" + x +
                 ", y=" + y +
@@ -64,7 +79,6 @@ public class TankStartMovingMsg extends Msg {
 
         Tank t = TankFrame.INSTANCE.findTankByUUID(this.id);
         if (t != null) {
-            t.setMoving(true);
             t.setX(x);
             t.setY(y);
             t.setDir(dir);
@@ -131,6 +145,6 @@ public class TankStartMovingMsg extends Msg {
 
     @Override
     public MsgType getMsgType() {
-        return MsgType.TankStartMoving;
+        return MsgType.TankDirChanged;
     }
 }

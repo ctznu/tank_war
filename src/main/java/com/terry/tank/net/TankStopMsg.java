@@ -23,6 +23,18 @@ public class TankStopMsg extends Msg {
         return y;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public TankStopMsg(UUID id, int x, int y) {
         this.id = id;
         this.x = x;
@@ -39,11 +51,20 @@ public class TankStopMsg extends Msg {
     }
 
     @Override
+    public String toString() {
+        return "TankStopMsg{" +
+                "id=" + id +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
+    }
+
+    @Override
     public void handle() {
         if (this.id.equals(TankFrame.INSTANCE.getMainTank().getId())) {
             return;
         }
-        Tank t = TankFrame.INSTANCE.findByUUID(this.id);
+        Tank t = TankFrame.INSTANCE.findTankByUUID(this.id);
         if (t != null) {
             t.setMoving(false);
             t.setX(x);
