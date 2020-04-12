@@ -3,6 +3,7 @@ package com.terry.tank;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import java.util.UUID;
 
 public class Tank {
     private int x, y;
@@ -17,6 +18,8 @@ public class Tank {
     private boolean living = true;
     Rectangle rect = new Rectangle();
     private Random random = new Random();
+
+    UUID id = UUID.randomUUID();
 
     public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
         super();
@@ -69,6 +72,14 @@ public class Tank {
 
     public void setDir(Dir dir) {
         this.dir = dir;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public void paint(Graphics g) {
