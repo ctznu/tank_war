@@ -9,7 +9,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import java.util.List;
 import java.util.UUID;
 
-public class TankJoinMsgDecoder extends ByteToMessageDecoder {
+public class MsgDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         if (in.readableBytes() < 8) return; // TCP 拆包粘包问题
@@ -17,35 +17,34 @@ public class TankJoinMsgDecoder extends ByteToMessageDecoder {
         in.markReaderIndex();
 
         MsgType msgType = MsgType.values()[in.readInt()];
-        int lenght = in.readInt();
+        int length = in.readInt();
 
-        if (in.readableBytes() < lenght) {
+        if (in.readableBytes() < length) {
             in.resetReaderIndex(); // 重置读指针
             return;
         }
 
-        byte[] bytes = new byte[lenght];
+        byte[] bytes = new byte[length];
         in.readBytes(bytes);
 
-        switch (msgType) {
+        Msg msg = null;
+        /*switch (msgType) {
             case TankJoin:
-                TankJoinMsg msg = new TankJoinMsg();
-                msg.parse(bytes);
-                out.add(msg);
+                msg = new TankJoinMsg();
+                break;
+            case TankStartMoving:
+                msg = new TankStartMovingMsg();
+                break;
+            case TankStop:
+                msg = new TankStopMsg();
                 break;
             default:
                 break;
-        }
+        }*/
+        msg = (Msg) Class.forName("com.terry.tank.net." + msgType.toString() + "Msg")
+                .getDeclaredConstructor().newInstance();
+        msg.parse(bytes);
+        out.add(msg);
 
-        /*TankJoinMsg msg = new TankJoinMsg();
-
-        msg.x = in.readInt();
-        msg.y = in.readInt();
-        msg.dir = Dir.values()[in.readInt()];
-        msg.moving = in.readBoolean();
-        msg.group = Group.values()[in.readInt()];
-        msg.id = new UUID(in.readLong(), in.readLong());
-
-        out.add(msg);*/
     }
 }

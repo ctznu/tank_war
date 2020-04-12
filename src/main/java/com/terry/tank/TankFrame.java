@@ -1,5 +1,9 @@
 package com.terry.tank;
 
+import com.terry.tank.net.Client;
+import com.terry.tank.net.TankStartMovingMsg;
+import com.terry.tank.net.TankStopMsg;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -154,13 +158,21 @@ public class TankFrame extends Frame {
         private void setMainTankDir() {
             if (!bL && !bU && !bR && !bD) {
                 myTank.setMoving(false);
+
+                // send tank stop msg
+                Client.INSTANCE.send(new TankStopMsg(getMainTank()));
             } else {
-                myTank.setMoving(true);
 
                 if (bL) myTank.setDir(LEFT);
                 if (bU) myTank.setDir(UP);
                 if (bR) myTank.setDir(RIGHT);
                 if (bD) myTank.setDir(DOWN);
+
+                // send tank moving msg
+                if (!myTank.isMoving()) {
+                    Client.INSTANCE.send(new TankStartMovingMsg(getMainTank()));
+                }
+                myTank.setMoving(true);
             }
         }
     }

@@ -26,8 +26,9 @@ public class Server {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline pl = ch.pipeline();
-                        pl/*.addLast(new TankJoinMsgDecoder())*/
-                                .addLast(new ServerChildHandler());
+                        pl.addLast(new MsgEncoder())
+                            .addLast(new MsgDecoder())
+                            .addLast(new ServerChildHandler());
                     }
                 })
                 .bind(8888)
@@ -52,6 +53,7 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ServerFrame.INSTANCE.updateClientMsg(msg.toString());
         Server.clients.writeAndFlush(msg);
     }
 }
