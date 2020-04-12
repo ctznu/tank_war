@@ -124,4 +124,9 @@ public class TankJoinMsg extends Msg{
         // send a new TankJoinMsg to the new joined tank
         Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
     }
+
+    @Override
+    public MsgType getMsgType() {
+        return MsgType.TankJoin;
+    }
 }
