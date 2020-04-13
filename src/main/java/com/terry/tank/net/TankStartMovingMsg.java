@@ -46,6 +46,22 @@ public class TankStartMovingMsg extends Msg {
         return dir;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
+    }
+
     @Override
     public String toString() {
         return "TankStartMovingMsg{" +

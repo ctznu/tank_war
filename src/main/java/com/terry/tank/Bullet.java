@@ -33,8 +33,24 @@ public class Bullet {
         this.living = true;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
+    }
+
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public void setLiving(boolean living) {
+        this.living = living;
     }
 
     public Group getGroup() {

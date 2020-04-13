@@ -18,8 +18,8 @@ public class Server {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup(2);
 
-        ServerBootstrap b = new ServerBootstrap();
         try {
+            ServerBootstrap b = new ServerBootstrap();
             ChannelFuture f = b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -55,5 +55,12 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ServerFrame.INSTANCE.updateClientMsg(msg.toString());
         Server.clients.writeAndFlush(msg);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        Server.clients.remove(ctx.channel());
+        ctx.close();
     }
 }

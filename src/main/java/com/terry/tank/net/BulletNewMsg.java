@@ -2,6 +2,7 @@ package com.terry.tank.net;
 
 import com.terry.tank.Bullet;
 import com.terry.tank.Dir;
+import com.terry.tank.Group;
 import com.terry.tank.TankFrame;
 
 import java.io.*;
@@ -13,6 +14,7 @@ public class BulletNewMsg extends Msg{
     UUID id;
     int x, y;
     Dir dir;
+    Group group;
 
     public BulletNewMsg(Bullet bullet) {
         this.playerID = bullet.getPlayerID();
@@ -20,7 +22,10 @@ public class BulletNewMsg extends Msg{
         this.x = bullet.getX();
         this.y = bullet.getY();
         this.dir = bullet.getDir();
-        TankFrame.INSTANCE.addBullet(bullet);
+        this.group = bullet.getGroup();
+    }
+
+    public BulletNewMsg() {
     }
 
     public UUID getPlayerID() {
@@ -43,20 +48,50 @@ public class BulletNewMsg extends Msg{
         return dir;
     }
 
+    public void setPlayerID(UUID playerID) {
+        this.playerID = playerID;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
+    }
+
+    @Override
+    public String toString() {
+        return "BulletNewMsg{" +
+                "playerID=" + playerID +
+                ", id=" + id +
+                ", x=" + x +
+                ", y=" + y +
+                ", dir=" + dir +
+                ", group=" + group +
+                '}';
+    }
+
     @Override
     public void handle() {
+        System.out.println("new bullet: " + this);
         if (this.playerID.equals(TankFrame.INSTANCE.getMainTank().getId())) {
             return;
         }
-        System.out.println(this);
 
-        Bullet bullet = new Bullet(this);
+        Bullet bullet = new Bullet(this.playerID, x, y, dir, group, TankFrame.INSTANCE);
 
         bullet.setId(this.id);
         TankFrame.INSTANCE.addBullet(bullet);
 
-        // send a new TankJoinMsg to the new joined tank
-//        Client.INSTANCE.send(new BulletNewMsg(bullet));
     }
 
     @Override
@@ -76,6 +111,7 @@ public class BulletNewMsg extends Msg{
             dos.writeInt(x);
             dos.writeInt(y);
             dos.writeInt(dir.ordinal());
+            dos.writeInt(group.ordinal());
             dos.flush();
             bytes = baos.toByteArray();
         } catch (IOException e) {
@@ -108,6 +144,7 @@ public class BulletNewMsg extends Msg{
             this.x = dis.readInt();
             this.y = dis.readInt();
             this.dir = Dir.values()[dis.readInt()];
+            this.group = Group.values()[dis.readInt()];
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

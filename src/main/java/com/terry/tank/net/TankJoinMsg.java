@@ -25,6 +25,7 @@ public class TankJoinMsg extends Msg{
     }
 
     public TankJoinMsg(int x, int y, Dir dir, boolean moving, Group group, UUID id) {
+        super();
         this.x = x;
         this.y = y;
         this.dir = dir;

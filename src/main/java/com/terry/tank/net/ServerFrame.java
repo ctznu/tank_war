@@ -25,7 +25,7 @@ public class ServerFrame extends Frame {
 
         taLeft.setFont(new Font("verderna", Font.PLAIN, 25));
 
-        this.addWindowFocusListener(new WindowAdapter() {
+        this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 System.exit(0);

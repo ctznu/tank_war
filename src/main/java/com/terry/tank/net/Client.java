@@ -50,6 +50,7 @@ public class Client {
     }
 
     public void send(Msg msg) {
+        System.out.println("SEND:" + msg);
         channel.writeAndFlush(msg);
     }
 
@@ -73,7 +74,7 @@ class ClientHandler extends SimpleChannelInboundHandler<Msg> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Msg msg) throws Exception {
-
+        System.out.println(msg);
         msg.handle();
 
     }

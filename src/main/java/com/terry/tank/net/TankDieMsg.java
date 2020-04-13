@@ -62,8 +62,9 @@ public class TankDieMsg extends Msg {
         if (this.id.equals(TankFrame.INSTANCE.getMainTank().getId())) {
             TankFrame.INSTANCE.getMainTank().die();
         } else {
-            if (tt != null) {
-                tt.die();
+            Tank t = TankFrame.INSTANCE.findTankByUUID(id);
+            if (t != null) {
+                t.die();
             }
         }
     }

@@ -23,7 +23,7 @@ public class Tank {
     Rectangle rect = new Rectangle();
     private Random random = new Random();
 
-    UUID id = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
 
     public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
         super();
@@ -110,24 +110,16 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        /*if (!living) {
+        if (!living) {
             TankFrame.INSTANCE.tanks.remove(this.getId());
-        }*/
+            return;
+        }
         //uuid on head
         Color c = g.getColor();
         g.setColor(Color.orange);
         g.drawString(id.toString(), x, y - 20);
         g.drawString("live=" + living, x, y - 10);
         g.setColor(c);
-
-        if (!living) {
-            moving = false;
-            c = g.getColor();
-            g.setColor(Color.WHITE);
-            g.drawRect(x, y, WIDTH, HEIGHT);
-            g.setColor(c);
-            return;
-        }
 
         BufferedImage img = null;
         boolean isGood = this.group == Group.GOOD;

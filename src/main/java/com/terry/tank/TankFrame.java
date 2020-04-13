@@ -132,20 +132,24 @@ public class TankFrame extends Frame {
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:
                     bL = true;
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_RIGHT:
                     bR = true;
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_UP:
                     bU = true;
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_DOWN:
                     bD = true;
+                    setMainTankDir();
                     break;
                 default:
                     break;
             }
-            setMainTankDir();
+
             new Thread(()->new Audio("audio/tank_move.wav").play()).start();
         }
 
@@ -155,15 +159,19 @@ public class TankFrame extends Frame {
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:
                     bL = false;
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_RIGHT:
                     bR = false;
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_UP:
                     bU = false;
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_DOWN:
                     bD = false;
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_F:
                     myTank.fire();
@@ -171,7 +179,6 @@ public class TankFrame extends Frame {
                 default:
                     break;
             }
-            setMainTankDir();
         }
 
         private void setMainTankDir() {

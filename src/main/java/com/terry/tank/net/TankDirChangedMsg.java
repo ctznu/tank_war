@@ -13,6 +13,7 @@ public class TankDirChangedMsg extends Msg {
     Dir dir;
 
     public TankDirChangedMsg(UUID id, int x, int y, Dir dir) {
+        super();
         this.id = id;
         this.x = x;
         this.y = y;
@@ -79,6 +80,7 @@ public class TankDirChangedMsg extends Msg {
 
         Tank t = TankFrame.INSTANCE.findTankByUUID(this.id);
         if (t != null) {
+            t.setMoving(true);
             t.setX(x);
             t.setY(y);
             t.setDir(dir);
